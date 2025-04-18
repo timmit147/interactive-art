@@ -1,1 +1,87 @@
-inde
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image with Flexible Cube</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .cube {
+            position: absolute;
+            background: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <img id="myImage" src="images/piet-mondrian.jpg" alt="piet mondrian">
+    <div class="cube" id="cube"></div>
+</div>
+
+<script>
+    const image = document.getElementById('myImage');
+    const cube = document.getElementById('cube');
+
+    // These variables allow you to set the position and size easily
+    const cubePosition = { x: 0.329, y: 0.275 }; // position as percentage of image size (0 to 1)
+    const cubeSize = { width: 0.194, height: 0.16 }; // size as percentage of image size (0 to 1)
+
+    function positionAndScaleCube() {
+        const container = image.parentElement;
+        const containerRatio = container.clientWidth / container.clientHeight;
+        const imageRatio = image.naturalWidth / image.naturalHeight;
+
+        let displayedWidth, displayedHeight;
+
+        if (imageRatio > containerRatio) {
+            // Image is limited by width
+            displayedWidth = container.clientWidth;
+            displayedHeight = container.clientWidth / imageRatio;
+        } else {
+            // Image is limited by height
+            displayedHeight = container.clientHeight;
+            displayedWidth = container.clientHeight * imageRatio;
+        }
+
+        const offsetX = (container.clientWidth - displayedWidth) / 2;
+        const offsetY = (container.clientHeight - displayedHeight) / 2;
+
+        // Position and size based on percentages (cubePosition and cubeSize)
+        const cubeX = offsetX + cubePosition.x * displayedWidth;
+        const cubeY = offsetY + cubePosition.y * displayedHeight;
+        const cubeW = displayedWidth * cubeSize.width;
+        const cubeH = displayedHeight * cubeSize.height;
+
+        // Apply the calculated values
+        cube.style.left = `${cubeX}px`;
+        cube.style.top = `${cubeY}px`;
+        cube.style.width = `${cubeW}px`;
+        cube.style.height = `${cubeH}px`;
+    }
+
+    window.addEventListener('resize', positionAndScaleCube);
+    window.addEventListener('load', positionAndScaleCube);
+</script>
+
+</body>
+</html>
